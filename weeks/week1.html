@@ -1,0 +1,1512 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Detailed Week 1 Pandas notes for IIT Madras BS Machine Learning Practice, including Series, DataFrames, selection, filtering, cleaning, statistics and worked Python examples.">
+  <title>Week 1 — Pandas for Tabular Data | MLP Notes</title>
+
+  <link rel="stylesheet" href="../styles.css">
+  <script defer src="../script.js"></script>
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)'], ['$', '$']],
+        displayMath: [['\\[', '\\]']]
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="topbar">
+  <a class="brand" href="../index.html">
+    <span class="brand-mark">M</span>
+    <span>MLP <b>Notes</b>
+      <small>IIT Madras BS · Machine Learning Practice</small>
+    </span>
+  </a>
+
+  <button class="menu-toggle" aria-label="Toggle navigation" aria-expanded="false">☰</button>
+
+  <nav class="top-nav">
+    <a href="../index.html">Home</a>
+    <a href="../README.md">About</a>
+    <button class="theme-toggle" type="button">◐ Theme</button>
+  </nav>
+</header>
+
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-heading">COURSE CONTENT</div>
+
+    <a class="side-link home-link" href="../index.html">
+      <span>⌂ Overview</span><small>Start here</small>
+    </a>
+
+    <a class="side-link" href="week0.html">
+      <span>Week 0</span><small>Orientation & Machine Learning Workflow</small>
+    </a>
+
+    <a class="side-link active" href="week1.html">
+      <span>Week 1</span><small>Pandas for Tabular Data</small>
+    </a>
+
+    <a class="side-link" href="week2.html">
+      <span>Week 2</span><small>Scikit-learn & Preprocessing</small>
+    </a>
+
+    <a class="side-link" href="week3.html">
+      <span>Week 3</span><small>Pipelines & Transformations</small>
+    </a>
+
+    <a class="side-link" href="week4.html">
+      <span>Week 4</span><small>Model Families & Regression</small>
+    </a>
+
+    <a class="side-link" href="week5.html">
+      <span>Week 5</span><small>Regression in Practice</small>
+    </a>
+
+    <a class="side-link" href="week6.html">
+      <span>Week 6</span><small>Classification in Practice</small>
+    </a>
+
+    <a class="side-link" href="week7.html">
+      <span>Week 7</span><small>Evaluation & Validation</small>
+    </a>
+
+    <a class="side-link" href="week8.html">
+      <span>Week 8</span><small>Integrated Revision</small>
+    </a>
+
+    <a class="side-link" href="week9.html">
+      <span>Week 9</span><small>Clustering</small>
+    </a>
+
+    <a class="side-link" href="week10.html">
+      <span>Week 10</span><small>Recommender Systems</small>
+    </a>
+
+    <a class="side-link" href="week11.html">
+      <span>Week 11</span><small>Time-Series Analysis</small>
+    </a>
+
+    <a class="side-link" href="week12.html">
+      <span>Week 12</span><small>Transfer Learning</small>
+    </a>
+
+    <div class="sidebar-note">
+      Notes are a living study guide. Check the active IITM course portal for
+      the exact lessons and assessment requirements.
+    </div>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main id="main" class="main-content">
+
+    <div class="breadcrumbs">
+      <a href="../index.html">Overview</a>
+      <span>/</span>
+      <span>Week 1</span>
+    </div>
+
+    <header class="page-hero">
+      <div class="eyebrow">WEEK 1 · DATA HANDLING</div>
+      <h1>Pandas for Tabular Data</h1>
+
+      <p>
+        Learn how to load, inspect, select, filter, clean, transform and
+        summarize structured data using Python's Pandas library. These skills
+        form the foundation of a reliable machine learning workflow.
+      </p>
+
+      <div class="page-actions">
+        <button class="button secondary print-button" type="button">
+          ↓ Print / Save PDF
+        </button>
+        <button class="button secondary mark-page" type="button"
+                data-page-complete="week1">
+          ✓ Mark module complete
+        </button>
+      </div>
+    </header>
+
+    <div class="content-layout">
+      <article class="notes">
+
+        <!-- SECTION 1 -->
+        <section class="note-section" id="section-1">
+          <div class="section-kicker">SECTION 01 · FUNDAMENTALS</div>
+          <h2>Introduction to Pandas</h2>
+
+          <h3>1.1 What is Pandas?</h3>
+          <p>
+            <strong>Pandas</strong> is an open-source Python library used for
+            data manipulation and analysis. It provides convenient data
+            structures for working with labelled, tabular and time-indexed
+            data.
+          </p>
+
+          <p>
+            In machine learning, datasets commonly contain rows representing
+            observations and columns representing features. Pandas helps us
+            understand and prepare such datasets before passing them to a
+            machine learning algorithm.
+          </p>
+
+          <h3>1.2 Why do we need Pandas?</h3>
+          <ul>
+            <li>Read data from CSV, Excel, JSON and other supported formats.</li>
+            <li>Inspect the number of observations and features.</li>
+            <li>Select specific rows and columns.</li>
+            <li>Filter observations using logical conditions.</li>
+            <li>Identify missing values and duplicate records.</li>
+            <li>Calculate descriptive statistics.</li>
+            <li>Group data and compare different categories.</li>
+            <li>Prepare data for subsequent preprocessing and modelling.</li>
+          </ul>
+
+          <h3>1.3 Importing Pandas</h3>
+          <pre><code>import pandas as pd
+
+print(pd.__version__)</code></pre>
+
+          <p>
+            The alias <code>pd</code> is the conventional shorthand for
+            Pandas. It keeps expressions such as
+            <code>pd.read_csv()</code> concise.
+          </p>
+
+          <h3>1.4 Pandas and NumPy</h3>
+          <p>
+            Pandas is built on top of the Python scientific computing
+            ecosystem and works closely with NumPy.
+          </p>
+          <ul>
+            <li><strong>NumPy:</strong> Focuses on efficient numerical arrays and operations.</li>
+            <li><strong>Pandas:</strong> Adds labelled rows and columns, heterogeneous data types and convenient data-analysis operations.</li>
+          </ul>
+
+          <div class="note-callout">
+            <strong>Remember:</strong> Pandas is primarily used to organize,
+            explore and manipulate data. It is not itself a single machine
+            learning algorithm.
+          </div>
+        </section>
+
+        <!-- SECTION 2 -->
+        <section class="note-section" id="section-2">
+          <div class="section-kicker">SECTION 02 · DATA STRUCTURES</div>
+          <h2>Series and DataFrames</h2>
+
+          <h3>2.1 What is a Series?</h3>
+          <p>
+            A <strong>Series</strong> is a one-dimensional labelled array.
+            It contains values and an associated index.
+          </p>
+
+          <pre><code>import pandas as pd
+
+marks = pd.Series([85, 90, 78, 92])
+
+print(marks)</code></pre>
+
+          <p>Conceptual output:</p>
+          <pre><code>0    85
+1    90
+2    78
+3    92
+dtype: int64</code></pre>
+
+          <p>
+            The left-hand numbers are index labels. The right-hand numbers
+            are the values stored in the Series.
+          </p>
+
+          <h3>2.2 Creating a Series with a custom index</h3>
+          <pre><code>marks = pd.Series(
+    [85, 90, 78],
+    index=["Asha", "Ravi", "Meera"]
+)
+
+print(marks)
+print(marks["Ravi"])</code></pre>
+
+          <p>Output:</p>
+          <pre><code>Asha     85
+Ravi     90
+Meera    78
+dtype: int64
+
+90</code></pre>
+
+          <p>
+            Here, student names are index labels. We can access Ravi's mark
+            using the label <code>"Ravi"</code>.
+          </p>
+
+          <h3>2.3 Important Series attributes</h3>
+          <pre><code>print(marks.index)
+print(marks.values)
+print(marks.dtype)
+print(marks.shape)
+print(marks.size)
+print(marks.name)</code></pre>
+
+          <ul>
+            <li><code>index</code>: The Series index labels.</li>
+            <li><code>values</code>: The underlying values.</li>
+            <li><code>dtype</code>: The data type of the values.</li>
+            <li><code>shape</code>: A tuple containing the dimensions.</li>
+            <li><code>size</code>: The total number of elements.</li>
+            <li><code>name</code>: The optional name of the Series.</li>
+          </ul>
+
+          <h3>2.4 What is a DataFrame?</h3>
+          <p>
+            A <strong>DataFrame</strong> is a two-dimensional labelled
+            tabular data structure with rows and columns. Different columns
+            may have different data types.
+          </p>
+
+          <pre><code>data = {
+    "Name": ["Asha", "Ravi", "Meera", "Arjun"],
+    "Age": [20, 21, 19, 22],
+    "Marks": [85, 90, 78, 92],
+    "City": ["Delhi", "Mumbai", "Delhi", "Chennai"]
+}
+
+df = pd.DataFrame(data)
+
+print(df)</code></pre>
+
+          <p>Output:</p>
+          <pre><code>    Name  Age  Marks     City
+0   Asha   20     85    Delhi
+1   Ravi   21     90   Mumbai
+2  Meera   19     78    Delhi
+3  Arjun   22     92  Chennai</code></pre>
+
+          <p>
+            Each row represents one student. Each column represents an
+            attribute of that student.
+          </p>
+
+          <h3>2.5 Series versus DataFrame</h3>
+          <ul>
+            <li>A Series is one-dimensional.</li>
+            <li>A DataFrame is two-dimensional.</li>
+            <li>Selecting one column using <code>df["Marks"]</code> returns a Series.</li>
+            <li>Selecting columns using <code>df[["Marks"]]</code> returns a DataFrame.</li>
+          </ul>
+
+          <pre><code>single_column = df["Marks"]
+table_column = df[["Marks"]]
+
+print(type(single_column))
+print(type(table_column))</code></pre>
+
+          <p>
+            This distinction matters when a later function expects a
+            one-dimensional target or a two-dimensional feature matrix.
+          </p>
+
+          <h3>2.6 Important DataFrame attributes</h3>
+          <pre><code>print(df.shape)
+print(df.size)
+print(df.ndim)
+print(df.columns)
+print(df.index)
+print(df.dtypes)</code></pre>
+
+          <ul>
+            <li><code>shape</code>: Number of rows and columns as <code>(rows, columns)</code>.</li>
+            <li><code>size</code>: Total number of cells.</li>
+            <li><code>ndim</code>: Number of dimensions; a DataFrame has 2.</li>
+            <li><code>columns</code>: Column labels.</li>
+            <li><code>index</code>: Row labels.</li>
+            <li><code>dtypes</code>: Data type of each column.</li>
+          </ul>
+
+          <p>For the example above:</p>
+          <pre><code>print(df.shape)  # (4, 4)
+print(df.size)   # 16
+print(df.ndim)   # 2</code></pre>
+
+          <div class="note-callout">
+            <strong>Common viva question:</strong> What is the difference
+            between <code>shape</code> and <code>size</code>?
+            <br>
+            <code>shape</code> returns the dimensions, whereas
+            <code>size</code> returns the total number of elements.
+          </div>
+        </section>
+
+        <!-- SECTION 3 -->
+        <section class="note-section" id="section-3">
+          <div class="section-kicker">SECTION 03 · LOADING AND INSPECTION</div>
+          <h2>Loading and inspecting datasets</h2>
+
+          <h3>3.1 Reading a CSV file</h3>
+          <p>
+            CSV stands for Comma-Separated Values. It is a common format for
+            storing tabular datasets.
+          </p>
+
+          <pre><code>import pandas as pd
+
+df = pd.read_csv("students.csv")
+
+print(df.head())</code></pre>
+
+          <p>
+            The file path must point to an accessible CSV file. In a notebook,
+            this may be a file in the current working directory or a specified
+            path.
+          </p>
+
+          <h3>3.2 Reading other formats</h3>
+          <pre><code># Excel
+df = pd.read_excel("students.xlsx")
+
+# JSON
+df = pd.read_json("students.json")
+
+# Read a CSV with a different separator
+df = pd.read_csv("data.csv", sep=";")
+
+# Read only selected columns
+df = pd.read_csv(
+    "students.csv",
+    usecols=["Name", "Marks"]
+)</code></pre>
+
+          <p>
+            Use the function that matches the file format and inspect the
+            result after loading.
+          </p>
+
+          <h3>3.3 head() and tail()</h3>
+          <pre><code>df.head()       # First five rows
+df.head(10)     # First ten rows
+
+df.tail()       # Last five rows
+df.tail(3)      # Last three rows</code></pre>
+
+          <p>
+            These methods are useful for checking whether the file was loaded
+            correctly and whether the values appear sensible.
+          </p>
+
+          <h3>3.4 info()</h3>
+          <pre><code>df.info()</code></pre>
+
+          <p>
+            The <code>info()</code> method summarizes the DataFrame structure.
+            It shows the index range, column names, non-null counts, data
+            types and memory usage.
+          </p>
+
+          <p>
+            A non-null count smaller than the total number of rows indicates
+            that a column may contain missing values.
+          </p>
+
+          <h3>3.5 describe()</h3>
+          <pre><code># Summary statistics for numeric columns
+df.describe()
+
+# Include non-numeric columns too
+df.describe(include="all")</code></pre>
+
+          <p>
+            For numeric columns, the summary typically includes:
+          </p>
+          <ul>
+            <li><code>count</code>: Number of non-missing observations.</li>
+            <li><code>mean</code>: Arithmetic average.</li>
+            <li><code>std</code>: Sample standard deviation.</li>
+            <li><code>min</code>: Minimum value.</li>
+            <li><code>25%</code>, <code>50%</code>, <code>75%</code>: Quartiles.</li>
+            <li><code>max</code>: Maximum value.</li>
+          </ul>
+
+          <p>
+            For non-numeric columns, summaries may include the number of
+            distinct values, the most frequent value and its frequency.
+          </p>
+
+          <h3>3.6 Other useful inspection methods</h3>
+          <pre><code>df.shape
+df.columns
+df.dtypes
+
+df.isna().sum()
+df.nunique()
+df["City"].value_counts()</code></pre>
+
+          <ul>
+            <li><code>isna().sum()</code>: Missing-value count per column.</li>
+            <li><code>nunique()</code>: Number of distinct non-missing values per column by default.</li>
+            <li><code>value_counts()</code>: Frequency of each value in a Series, excluding missing values by default.</li>
+          </ul>
+
+          <h3>3.7 A standard inspection routine</h3>
+          <pre><code>import pandas as pd
+
+df = pd.read_csv("students.csv")
+
+print("First rows:")
+print(df.head())
+
+print("Dimensions:")
+print(df.shape)
+
+print("Column names:")
+print(df.columns)
+
+print("Data types and non-null counts:")
+df.info()
+
+print("Missing values:")
+print(df.isna().sum())
+
+print("Summary statistics:")
+print(df.describe(include="all"))</code></pre>
+
+          <p>
+            This routine gives a useful first understanding of an unfamiliar
+            dataset before you start changing it.
+          </p>
+        </section>
+
+        <!-- SECTION 4 -->
+        <section class="note-section" id="section-4">
+          <div class="section-kicker">SECTION 04 · INDEXING</div>
+          <h2>Selecting rows and columns</h2>
+
+          <h3>4.1 Selecting a single column</h3>
+          <pre><code>df["Name"]</code></pre>
+
+          <p>This normally returns a Series.</p>
+
+          <h3>4.2 Selecting multiple columns</h3>
+          <pre><code>df[["Name", "Marks"]]</code></pre>
+
+          <p>This returns a DataFrame containing the requested columns.</p>
+
+          <h3>4.3 The loc accessor</h3>
+          <p>
+            <code>loc</code> selects rows and columns by their labels.
+          </p>
+
+          <pre><code># Row with index label 0
+df.loc[0]
+
+# Rows with labels 0 and 1
+df.loc[[0, 1]]
+
+# Row label 0, selected columns
+df.loc[0, ["Name", "Marks"]]
+
+# Rows with labels 0 through 2, inclusive
+df.loc[0:2]
+
+# All rows, selected columns
+df.loc[:, ["Name", "Marks"]]</code></pre>
+
+          <p>
+            In label-based slicing, both endpoints are included when the
+            labels exist and the index ordering supports that slice.
+          </p>
+
+          <h3>4.4 The iloc accessor</h3>
+          <p>
+            <code>iloc</code> selects rows and columns by integer position,
+            starting at zero.
+          </p>
+
+          <pre><code># First row
+df.iloc[0]
+
+# First two rows
+df.iloc[0:2]
+
+# First row, second column
+df.iloc[0, 1]
+
+# First three rows and first two columns
+df.iloc[0:3, 0:2]
+
+# All rows, first two columns
+df.iloc[:, 0:2]</code></pre>
+
+          <p>
+            In positional slicing, the start is included but the stop is
+            excluded, just as in ordinary Python slicing.
+          </p>
+
+          <h3>4.5 loc versus iloc</h3>
+          <ul>
+            <li><code>loc</code> uses index and column labels.</li>
+            <li><code>iloc</code> uses integer positions.</li>
+            <li>A row's label need not equal its position.</li>
+          </ul>
+
+          <pre><code>df = pd.DataFrame(
+    {"Name": ["Asha", "Ravi", "Meera"]},
+    index=[10, 20, 30]
+)
+
+print(df.loc[20])   # Row whose label is 20
+print(df.iloc[1])   # Second row by position</code></pre>
+
+          <p>
+            Both expressions select Ravi here, but they use different
+            addressing systems.
+          </p>
+
+          <h3>4.6 Resetting the index</h3>
+          <pre><code>df = df.reset_index(drop=True)</code></pre>
+
+          <p>
+            This creates a fresh default integer index. With
+            <code>drop=True</code>, the old index is not added as a new column.
+          </p>
+
+          <div class="note-callout">
+            <strong>Common mistake:</strong> Assuming that row position 2
+            always has index label 2. After sorting, filtering or resetting
+            the index, labels and positions can differ.
+          </div>
+        </section>
+
+        <!-- SECTION 5 -->
+        <section class="note-section" id="section-5">
+          <div class="section-kicker">SECTION 05 · FILTERING</div>
+          <h2>Boolean filtering and conditions</h2>
+
+          <h3>5.1 Filtering with one condition</h3>
+          <pre><code># Students scoring at least 85
+high_scores = df[df["Marks"] >= 85]
+
+print(high_scores)</code></pre>
+
+          <p>
+            The expression <code>df["Marks"] &gt;= 85</code> creates a
+            Boolean Series. Pandas uses it to retain rows for which the
+            condition is true.
+          </p>
+
+          <h3>5.2 Comparison operators</h3>
+          <ul>
+            <li><code>==</code>: Equal to.</li>
+            <li><code>!=</code>: Not equal to.</li>
+            <li><code>&gt;</code>: Greater than.</li>
+            <li><code>&gt;=</code>: Greater than or equal to.</li>
+            <li><code>&lt;</code>: Less than.</li>
+            <li><code>&lt;=</code>: Less than or equal to.</li>
+          </ul>
+
+          <h3>5.3 Combining conditions with AND</h3>
+          <pre><code># Age at least 20 AND marks at least 85
+result = df[
+    (df["Age"] >= 20) &
+    (df["Marks"] >= 85)
+]</code></pre>
+
+          <p>
+            The <code>&amp;</code> operator combines element-wise Boolean
+            conditions. Parentheses around each comparison are important.
+          </p>
+
+          <h3>5.4 Combining conditions with OR</h3>
+          <pre><code># Students from Delhi OR students scoring above 90
+result = df[
+    (df["City"] == "Delhi") |
+    (df["Marks"] > 90)
+]</code></pre>
+
+          <h3>5.5 Negating a condition</h3>
+          <pre><code># Students who are not from Delhi
+result = df[df["City"] != "Delhi"]
+
+# Negate a Boolean condition
+result = df[~(df["Marks"] >= 85)]</code></pre>
+
+          <h3>5.6 Filtering using isin()</h3>
+          <pre><code>cities = ["Delhi", "Mumbai"]
+
+result = df[df["City"].isin(cities)]</code></pre>
+
+          <p>
+            This retains rows whose city is one of the values in the
+            specified collection.
+          </p>
+
+          <h3>5.7 Filtering ranges with between()</h3>
+          <pre><code># Inclusive lower and upper bounds by default
+result = df[df["Marks"].between(80, 90)]</code></pre>
+
+          <h3>5.8 Filtering text</h3>
+          <pre><code># Names containing the letter 'a'
+result = df[
+    df["Name"].str.contains("a", case=False, na=False)
+]</code></pre>
+
+          <p>
+            String accessors such as <code>.str.contains()</code> provide
+            useful ways to filter textual columns.
+          </p>
+
+          <h3>5.9 Why not use and/or?</h3>
+          <pre><code># Incorrect for combining Pandas Series:
+# df[(df["Age"] >= 20) and (df["Marks"] >= 85)]
+
+# Correct:
+df[(df["Age"] >= 20) & (df["Marks"] >= 85)]</code></pre>
+
+          <p>
+            Python's <code>and</code> and <code>or</code> expect single
+            truth values. Pandas Series contain multiple Boolean values, so
+            use <code>&amp;</code> and <code>|</code> for element-wise
+            conditions.
+          </p>
+        </section>
+
+        <!-- SECTION 6 -->
+        <section class="note-section" id="section-6">
+          <div class="section-kicker">SECTION 06 · SORTING</div>
+          <h2>Sorting and ranking data</h2>
+
+          <h3>6.1 Sorting by a column</h3>
+          <pre><code># Ascending order
+df.sort_values(by="Marks")
+
+# Descending order
+df.sort_values(by="Marks", ascending=False)</code></pre>
+
+          <p>
+            By default, <code>sort_values()</code> returns a new sorted
+            DataFrame rather than modifying the original DataFrame in place.
+          </p>
+
+          <h3>6.2 Sorting by multiple columns</h3>
+          <pre><code>df.sort_values(
+    by=["City", "Marks"],
+    ascending=[True, False]
+)</code></pre>
+
+          <p>
+            This sorts cities alphabetically and, within each city, sorts
+            marks from highest to lowest.
+          </p>
+
+          <h3>6.3 Sorting by index</h3>
+          <pre><code>df.sort_index()</code></pre>
+
+          <p>
+            Use <code>sort_index()</code> to order rows or columns by their
+            index labels.
+          </p>
+
+          <h3>6.4 Ranking values</h3>
+          <pre><code>df["Rank"] = df["Marks"].rank(
+    ascending=False,
+    method="min"
+)</code></pre>
+
+          <p>
+            Ranking assigns relative positions based on values. When values
+            tie, the chosen ranking method determines how the ties are handled.
+          </p>
+        </section>
+
+        <!-- SECTION 7 -->
+        <section class="note-section" id="section-7">
+          <div class="section-kicker">SECTION 07 · DATA CLEANING</div>
+          <h2>Dropping rows and columns</h2>
+
+          <h3>7.1 Removing columns</h3>
+          <pre><code># Remove one column
+df.drop(columns=["City"])
+
+# Remove multiple columns
+df.drop(columns=["City", "Age"])</code></pre>
+
+          <p>
+            These expressions return a new DataFrame. Assign the result if
+            you want to keep the change:
+          </p>
+
+          <pre><code>df = df.drop(columns=["City"])</code></pre>
+
+          <h3>7.2 Removing rows by index label</h3>
+          <pre><code>df.drop(index=[0, 2])</code></pre>
+
+          <p>
+            This removes rows whose index labels are 0 and 2. The labels
+            do not necessarily correspond to the first and third positions.
+          </p>
+
+          <h3>7.3 The axis argument</h3>
+          <pre><code>df.drop("City", axis=1)  # Drop a column
+df.drop(0, axis=0)       # Drop a row by index label</code></pre>
+
+          <ul>
+            <li><code>axis=0</code>: Operate along the row axis.</li>
+            <li><code>axis=1</code>: Operate along the column axis.</li>
+          </ul>
+
+          <p>
+            Using <code>columns=</code> or <code>index=</code> is often
+            clearer than relying on the axis argument.
+          </p>
+
+          <h3>7.4 Removing duplicates</h3>
+          <pre><code># Identify duplicated rows
+df.duplicated()
+
+# Count duplicated rows
+df.duplicated().sum()
+
+# Remove fully duplicated rows
+df = df.drop_duplicates()
+
+# Identify duplicates based on selected columns
+df.duplicated(subset=["Name", "City"])</code></pre>
+
+          <p>
+            By default, Pandas considers later occurrences of a duplicate
+            row duplicated, while keeping the first occurrence when
+            <code>drop_duplicates()</code> is used.
+          </p>
+
+          <div class="note-callout">
+            <strong>Important:</strong> Two records sharing a name are not
+            necessarily duplicates. Verify the meaning of the data before
+            removing rows.
+          </div>
+        </section>
+
+        <!-- SECTION 8 -->
+        <section class="note-section" id="section-8">
+          <div class="section-kicker">SECTION 08 · MISSING VALUES</div>
+          <h2>Detecting and handling missing data</h2>
+
+          <h3>8.1 What are missing values?</h3>
+          <p>
+            Missing values indicate that a field does not contain an
+            available observation. In Pandas, missingness can be represented
+            by values such as <code>NaN</code>, <code>None</code> or
+            <code>pd.NA</code>, depending on the data type.
+          </p>
+
+          <h3>8.2 Detecting missing values</h3>
+          <pre><code># Boolean mask of missing values
+df.isna()
+
+# Missing-value count per column
+df.isna().sum()
+
+# Total missing cells
+df.isna().sum().sum()
+
+# Count non-missing values per column
+df.notna().sum()</code></pre>
+
+          <h3>8.3 Dropping missing data</h3>
+          <pre><code># Drop rows containing any missing value
+df.dropna()
+
+# Drop columns containing any missing value
+df.dropna(axis=1)
+
+# Require at least three non-missing values
+df.dropna(thresh=3)
+
+# Consider only selected columns
+df.dropna(subset=["Marks"])</code></pre>
+
+          <p>
+            Dropping rows can reduce the amount of available training data.
+            It can also introduce bias when missingness is systematic.
+          </p>
+
+          <h3>8.4 Filling missing values</h3>
+          <pre><code># Fill a column with a fixed value
+df["City"] = df["City"].fillna("Unknown")
+
+# Fill missing marks with the column median
+df["Marks"] = df["Marks"].fillna(
+    df["Marks"].median()
+)</code></pre>
+
+          <p>
+            Mean imputation is often considered for reasonably distributed
+            numeric data, while median imputation can be more robust to
+            extreme values. The appropriate method depends on the dataset.
+          </p>
+
+          <h3>8.5 Forward and backward filling</h3>
+          <pre><code>df["Value"] = df["Value"].ffill()
+df["Value"] = df["Value"].bfill()</code></pre>
+
+          <p>
+            Forward filling propagates the last valid observation; backward
+            filling propagates the next valid observation. These methods are
+            particularly relevant to ordered or time-indexed data and should
+            be used only when the data's meaning justifies them.
+          </p>
+
+          <h3>8.6 Missing values in machine learning</h3>
+          <p>
+            For machine learning, do not calculate imputation values using
+            the entire dataset before splitting it into training and test
+            sets. Fit the imputation rule using training data, then apply
+            that fitted rule to validation and test data. This helps prevent
+            data leakage.
+          </p>
+        </section>
+
+        <!-- SECTION 9 -->
+        <section class="note-section" id="section-9">
+          <div class="section-kicker">SECTION 09 · DESCRIPTIVE STATISTICS</div>
+          <h2>Statistical operations in Pandas</h2>
+
+          <h3>9.1 Mean</h3>
+          <p>
+            The arithmetic mean is the sum of observations divided by the
+            number of observations.
+          </p>
+
+          \[
+            \bar{x} = \frac{1}{n}\sum_{i=1}^{n}x_i
+          \]
+
+          <pre><code>df["Marks"].mean()</code></pre>
+
+          <h3>9.2 Median</h3>
+          <p>
+            The median is the middle value after sorting the observations.
+            If there is an even number of observations, the median is the
+            average of the two middle values.
+          </p>
+
+          <pre><code>df["Marks"].median()</code></pre>
+
+          <h3>9.3 Mode</h3>
+          <p>
+            The mode is the most frequently occurring value. A dataset can
+            have multiple modes.
+          </p>
+
+          <pre><code>df["Marks"].mode()
+df["City"].mode()</code></pre>
+
+          <h3>9.4 Minimum, maximum and range</h3>
+          <pre><code>minimum = df["Marks"].min()
+maximum = df["Marks"].max()
+value_range = maximum - minimum</code></pre>
+
+          <p>
+            The range is the difference between the maximum and minimum
+            observations.
+          </p>
+
+          <h3>9.5 Variance and standard deviation</h3>
+          <p>
+            Variance measures squared deviations from the mean. Standard
+            deviation is its square root and is expressed in the same units
+            as the original variable.
+          </p>
+
+          \[
+            s^2 = \frac{1}{n-1}
+            \sum_{i=1}^{n}(x_i-\bar{x})^2
+          \]
+
+          \[
+            s = \sqrt{s^2}
+          \]
+
+          <pre><code>df["Marks"].var()
+df["Marks"].std()</code></pre>
+
+          <p>
+            By default, Pandas uses sample variance and sample standard
+            deviation, with a denominator based on \(n-1\). Set
+            <code>ddof=0</code> when population-style calculations are
+            specifically required.
+          </p>
+
+          <h3>9.6 Quantiles and quartiles</h3>
+          <pre><code>df["Marks"].quantile(0.25)
+df["Marks"].quantile(0.50)
+df["Marks"].quantile(0.75)</code></pre>
+
+          <ul>
+            <li>First quartile: 25th percentile.</li>
+            <li>Second quartile: 50th percentile, corresponding to the median.</li>
+            <li>Third quartile: 75th percentile.</li>
+          </ul>
+
+          <h3>9.7 Counts and unique values</h3>
+          <pre><code>df["City"].count()
+df["City"].nunique()
+df["City"].unique()
+df["City"].value_counts()</code></pre>
+
+          <p>
+            <code>count()</code> counts non-missing observations.
+            <code>nunique()</code> counts distinct values, and
+            <code>unique()</code> returns the distinct values themselves.
+            <code>value_counts()</code> provides the frequency of each value.
+          </p>
+
+          <h3>9.8 Correlation</h3>
+          <pre><code>df[["Age", "Marks"]].corr()</code></pre>
+
+          <p>
+            Correlation summarizes the strength and direction of a
+            relationship between numeric variables, according to the chosen
+            correlation method. It does not establish causation.
+          </p>
+        </section>
+
+        <!-- SECTION 10 -->
+        <section class="note-section" id="section-10">
+          <div class="section-kicker">SECTION 10 · GROUPBY</div>
+          <h2>Grouping and aggregation</h2>
+
+          <h3>10.1 What is groupby()?</h3>
+          <p>
+            The <code>groupby()</code> method allows us to divide observations
+            into groups and compute summaries for each group. This is
+            commonly described as split, apply and combine.
+          </p>
+
+          <pre><code># Average marks for each city
+df.groupby("City")["Marks"].mean()</code></pre>
+
+          <h3>10.2 Multiple aggregation functions</h3>
+          <pre><code>df.groupby("City")["Marks"].agg(
+    ["count", "mean", "median", "min", "max"]
+)</code></pre>
+
+          <p>
+            This returns several statistics for each city in one operation.
+          </p>
+
+          <h3>10.3 Grouping by multiple columns</h3>
+          <pre><code>df.groupby(
+    ["City", "Age"]
+)["Marks"].mean()</code></pre>
+
+          <p>
+            Grouping by multiple columns creates groups defined by
+            combinations of the specified values.
+          </p>
+
+          <h3>10.4 Named aggregation</h3>
+          <pre><code>summary = df.groupby("City").agg(
+    average_marks=("Marks", "mean"),
+    highest_marks=("Marks", "max"),
+    student_count=("Name", "count")
+)</code></pre>
+
+          <p>
+            Named aggregation makes the resulting summary easier to interpret
+            and use in later analysis.
+          </p>
+
+          <h3>10.5 transform() versus agg()</h3>
+          <pre><code># One summarized row per city
+df.groupby("City")["Marks"].agg("mean")
+
+# A group mean aligned to the original rows
+df["City_Average"] = (
+    df.groupby("City")["Marks"].transform("mean")
+)</code></pre>
+
+          <p>
+            <code>agg()</code> generally reduces each group to summary
+            results. <code>transform()</code> returns results aligned with
+            the original rows, which can be useful for comparisons.
+          </p>
+        </section>
+
+        <!-- SECTION 11 -->
+        <section class="note-section" id="section-11">
+          <div class="section-kicker">SECTION 11 · PRACTICAL WORKFLOW</div>
+          <h2>Complete worked example</h2>
+
+          <p>
+            Consider a small student dataset. We will create the data,
+            inspect it, filter rows, sort marks, calculate descriptive
+            statistics and compare cities.
+          </p>
+
+          <h3>Step 1: Create a dataset</h3>
+          <pre><code>import pandas as pd
+
+data = {
+    "Name": [
+        "Asha", "Ravi", "Meera",
+        "Arjun", "Diya", "Kabir"
+    ],
+    "Age": [20, 21, 19, 22, 20, 21],
+    "City": [
+        "Delhi", "Mumbai", "Delhi",
+        "Chennai", "Mumbai", "Delhi"
+    ],
+    "Marks": [85, 90, 78, 92, 88, 76]
+}
+
+df = pd.DataFrame(data)</code></pre>
+
+          <h3>Step 2: Inspect the data</h3>
+          <pre><code>print(df.head())
+print("Shape:", df.shape)
+print(df.dtypes)
+print(df.describe())</code></pre>
+
+          <h3>Step 3: Select relevant columns</h3>
+          <pre><code>student_marks = df[["Name", "Marks"]]
+print(student_marks)</code></pre>
+
+          <h3>Step 4: Filter high-scoring students</h3>
+          <pre><code>high_scorers = df[df["Marks"] >= 85]
+
+print(high_scorers)</code></pre>
+
+          <h3>Step 5: Apply multiple conditions</h3>
+          <pre><code>result = df[
+    (df["Age"] >= 20) &
+    (df["Marks"] >= 85)
+]
+
+print(result)</code></pre>
+
+          <h3>Step 6: Sort by marks</h3>
+          <pre><code>ranked = df.sort_values(
+    by="Marks",
+    ascending=False
+)
+
+print(ranked)</code></pre>
+
+          <h3>Step 7: Calculate statistics</h3>
+          <pre><code>print("Mean:", df["Marks"].mean())
+print("Median:", df["Marks"].median())
+print("Standard deviation:", df["Marks"].std())
+print("Minimum:", df["Marks"].min())
+print("Maximum:", df["Marks"].max())</code></pre>
+
+          <h3>Step 8: Compare cities</h3>
+          <pre><code>city_summary = df.groupby("City").agg(
+    average_marks=("Marks", "mean"),
+    highest_marks=("Marks", "max"),
+    student_count=("Name", "count")
+)
+
+print(city_summary)</code></pre>
+
+          <h3>Step 9: Export a result</h3>
+          <pre><code>city_summary.to_csv(
+    "city_summary.csv"
+)</code></pre>
+
+          <p>
+            The result can now be saved and reused for reporting or further
+            analysis.
+          </p>
+
+          <div class="note-callout">
+            <strong>Machine learning connection:</strong> Pandas helps prepare
+            the feature table and target column. In later weeks, preprocessing
+            and scikit-learn estimators will turn this prepared data into
+            a modelling workflow.
+          </div>
+        </section>
+
+        <!-- SECTION 12 -->
+        <section class="note-section" id="section-12">
+          <div class="section-kicker">SECTION 12 · COMMON ERRORS</div>
+          <h2>Common mistakes and debugging</h2>
+
+          <h3>Mistake 1: Using parentheses instead of square brackets</h3>
+          <pre><code># Correct
+df["Marks"]
+
+# Incorrect for ordinary column selection
+# df("Marks")</code></pre>
+
+          <h3>Mistake 2: Forgetting parentheses in multiple conditions</h3>
+          <pre><code># Correct
+df[(df["Age"] >= 20) & (df["Marks"] >= 85)]</code></pre>
+
+          <h3>Mistake 3: Confusing loc and iloc</h3>
+          <pre><code>df.loc[10]   # Label 10
+df.iloc[10]  # Position 10 (the eleventh row)</code></pre>
+
+          <h3>Mistake 4: Assuming drop() changes the original DataFrame</h3>
+          <pre><code># Save the result
+df = df.drop(columns=["City"])</code></pre>
+
+          <h3>Mistake 5: Ignoring missing values</h3>
+          <pre><code>print(df.isna().sum())</code></pre>
+
+          <h3>Mistake 6: Treating a column name as a method</h3>
+          <pre><code># Preferred: bracket notation
+df["Name"]
+
+# Attribute notation may work for some column names,
+# but is less reliable and can conflict with methods.
+df.Name</code></pre>
+
+          <h3>Mistake 7: Using chained assignment</h3>
+          <pre><code># Prefer a single .loc operation
+df.loc[df["Marks"] < 40, "Result"] = "Fail"</code></pre>
+
+          <p>
+            Explicit indexing with <code>.loc</code> helps make row and
+            column assignments clearer and avoids common chained-assignment
+            problems.
+          </p>
+
+          <h3>Mistake 8: Assuming every numeric column is a feature</h3>
+          <p>
+            An identifier such as a student ID may be numeric but not useful
+            as a predictive feature. Likewise, the target must not
+            accidentally be included in the feature matrix. The role of
+            each column matters more than its data type alone.
+          </p>
+        </section>
+
+        <!-- SECTION 13 -->
+        <section class="note-section" id="section-13">
+          <div class="section-kicker">SECTION 13 · QUICK REFERENCE</div>
+          <h2>Pandas method cheat sheet</h2>
+
+          <h3>Inspecting data</h3>
+          <pre><code>df.head()
+df.tail()
+df.info()
+df.describe()
+df.shape
+df.columns
+df.dtypes</code></pre>
+
+          <h3>Selecting and filtering</h3>
+          <pre><code>df["column"]
+df[["column1", "column2"]]
+df.loc[rows, columns]
+df.iloc[row_positions, column_positions]
+df[df["column"] > value]
+df[df["column"].isin(values)]</code></pre>
+
+          <h3>Cleaning</h3>
+          <pre><code>df.isna().sum()
+df.drop(columns=["column"])
+df.drop(index=[0, 1])
+df.drop_duplicates()
+df.dropna()
+df["column"].fillna(value)</code></pre>
+
+          <h3>Statistics and grouping</h3>
+          <pre><code>df["column"].mean()
+df["column"].median()
+df["column"].mode()
+df["column"].std()
+df["column"].min()
+df["column"].max()
+df["column"].value_counts()
+df.groupby("category")["value"].mean()</code></pre>
+
+          <h3>Sorting and exporting</h3>
+          <pre><code>df.sort_values("column")
+df.sort_values("column", ascending=False)
+df.sort_index()
+df.to_csv("output.csv", index=False)</code></pre>
+        </section>
+
+        <!-- SECTION 14 -->
+        <section class="note-section" id="section-14">
+          <div class="section-kicker">SECTION 14 · EXERCISES</div>
+          <h2>Practice exercises</h2>
+
+          <p>
+            Attempt these exercises without looking at the worked example.
+            Use the student dataset from Section 11 unless the question
+            specifies otherwise.
+          </p>
+
+          <h3>Beginner level</h3>
+          <ol>
+            <li>Create a Series containing five integers and assign custom index labels.</li>
+            <li>Create a DataFrame containing student names, ages, cities and marks.</li>
+            <li>Display the first three rows and last two rows.</li>
+            <li>Print the shape, columns, data types and summary statistics.</li>
+            <li>Select only the Name and Marks columns.</li>
+          </ol>
+
+          <h3>Intermediate level</h3>
+          <ol>
+            <li>Select the row at position 2 using <code>iloc</code>.</li>
+            <li>Select the row whose index label is 2 using <code>loc</code>.</li>
+            <li>Find students scoring at least 85.</li>
+            <li>Find students aged at least 20 who scored more than 80.</li>
+            <li>Find students who live in Delhi or Mumbai.</li>
+            <li>Sort all students by marks in descending order.</li>
+            <li>Calculate the mean, median and standard deviation of marks.</li>
+          </ol>
+
+          <h3>Advanced practice</h3>
+          <ol>
+            <li>Introduce a missing value and count missing entries in each column.</li>
+            <li>Fill a missing numeric value using the column median.</li>
+            <li>Identify and remove fully duplicated records.</li>
+            <li>Calculate the mean and maximum marks for each city.</li>
+            <li>Add a column named <code>Result</code>, assigning Pass to students with marks at least 40 and Fail otherwise.</li>
+            <li>Export the city-wise summary to a CSV file.</li>
+          </ol>
+        </section>
+
+        <!-- SECTION 15 -->
+        <section class="note-section" id="section-15">
+          <div class="section-kicker">SECTION 15 · VIVA PREPARATION</div>
+          <h2>Viva questions and answers</h2>
+
+          <h3>Q1. What is Pandas?</h3>
+          <p>
+            Pandas is a Python library for manipulating, cleaning, exploring
+            and analyzing structured data.
+          </p>
+
+          <h3>Q2. What is the difference between a Series and a DataFrame?</h3>
+          <p>
+            A Series is a one-dimensional labelled data structure, whereas a
+            DataFrame is a two-dimensional labelled table with rows and columns.
+          </p>
+
+          <h3>Q3. What does pd.read_csv() do?</h3>
+          <p>
+            It reads a CSV file into a DataFrame by default.
+          </p>
+
+          <h3>Q4. What is the difference between head() and info()?</h3>
+          <p>
+            <code>head()</code> displays the first few rows. <code>info()</code>
+            summarizes the DataFrame's structure, data types and non-null counts.
+          </p>
+
+          <h3>Q5. What is the difference between loc and iloc?</h3>
+          <p>
+            <code>loc</code> uses labels, while <code>iloc</code> uses
+            integer positions.
+          </p>
+
+          <h3>Q6. Why does df["Marks"] return a Series?</h3>
+          <p>
+            Selecting one column normally returns a one-dimensional Series.
+          </p>
+
+          <h3>Q7. Why does df[["Marks"]] return a DataFrame?</h3>
+          <p>
+            The list of column names requests a two-dimensional subset,
+            even when the list contains only one column.
+          </p>
+
+          <h3>Q8. What is Boolean indexing?</h3>
+          <p>
+            Boolean indexing selects rows using a Boolean condition that
+            indicates which observations should be retained.
+          </p>
+
+          <h3>Q9. Why use &amp; instead of and in a Pandas filter?</h3>
+          <p>
+            <code>&amp;</code> combines Boolean Series element by element.
+            Python's <code>and</code> expects a single truth value.
+          </p>
+
+          <h3>Q10. What is the difference between drop() and dropna()?</h3>
+          <p>
+            <code>drop()</code> removes specified labels or columns.
+            <code>dropna()</code> removes rows or columns according to the
+            presence of missing values.
+          </p>
+
+          <h3>Q11. What does describe() return?</h3>
+          <p>
+            It returns descriptive statistics for the selected columns,
+            such as count, mean, standard deviation, quartiles and extrema
+            for numeric columns.
+          </p>
+
+          <h3>Q12. What is the difference between mean and median?</h3>
+          <p>
+            The mean is the arithmetic average. The median is the middle
+            value after sorting. The median is generally less sensitive
+            to extreme observations.
+          </p>
+
+          <h3>Q13. What does groupby() do?</h3>
+          <p>
+            It divides observations into groups so that calculations can
+            be performed separately for each group.
+          </p>
+
+          <h3>Q14. What is the difference between count() and size?</h3>
+          <p>
+            Series <code>count()</code> counts non-missing values.
+            The DataFrame attribute <code>size</code> gives the total
+            number of cells. For grouped data, <code>GroupBy.size()</code>
+            counts rows in each group, including rows with missing values
+            in other columns.
+          </p>
+
+          <h3>Q15. Why is data inspection important before machine learning?</h3>
+          <p>
+            Inspection helps identify incorrect data types, missing values,
+            duplicates, unusual distributions and possible target or feature
+            problems before modelling.
+          </p>
+
+          <h3>Q16. Does correlation prove causation?</h3>
+          <p>
+            No. Correlation describes an association between variables but
+            does not establish that one variable causes another.
+          </p>
+
+          <h3>Q17. Why should we be careful when dropping missing rows?</h3>
+          <p>
+            Removing rows can discard useful information and introduce bias
+            if the missing values are not randomly distributed.
+          </p>
+
+          <h3>Q18. Why should imputation be fitted only on training data?</h3>
+          <p>
+            To avoid leakage from validation or test data into the
+            training workflow. The fitted imputation rule should then be
+            applied to the held-out data.
+          </p>
+        </section>
+
+        <!-- REVISION -->
+        <section class="note-section" id="section-16">
+          <div class="section-kicker">FINAL REVISION</div>
+          <h2>Week 1 learning checklist</h2>
+
+          <p>
+            Before moving to Week 2, make sure you can complete the following
+            tasks without copying a solution.
+          </p>
+
+          <ul>
+            <li>Explain Series and DataFrames and create both.</li>
+            <li>Read a CSV file and inspect its dimensions and data types.</li>
+            <li>Use head(), tail(), info() and describe().</li>
+            <li>Select columns and understand Series versus DataFrame output.</li>
+            <li>Use loc and iloc correctly.</li>
+            <li>Write filters using one or multiple conditions.</li>
+            <li>Sort values and remove unwanted columns or rows.</li>
+            <li>Identify duplicates and missing values.</li>
+            <li>Calculate descriptive statistics.</li>
+            <li>Use groupby() and aggregation to summarize categories.</li>
+            <li>Explain why inspection and data quality matter for ML.</li>
+          </ul>
+
+          <div class="note-callout">
+            <strong>Completion target:</strong> Take an unfamiliar CSV file,
+            inspect it, identify data-quality issues, filter and summarize
+            its observations, and explain your decisions. Then move to Week 2:
+            scikit-learn and preprocessing.
+          </div>
+        </section>
+
+        <!-- PERSONAL STUDY NOTES -->
+        <section class="practice-box">
+          <div class="eyebrow">ACTIVE RECALL</div>
+          <h2>My Week 1 revision notes</h2>
+
+          <p>
+            Write a short summary of the concepts you learned, list the
+            methods you need to practise, and record questions for your next
+            revision session.
+          </p>
+
+          <label class="reflection-label" for="reflection">
+            My summary / questions
+          </label>
+
+          <textarea id="reflection" rows="6"
+            placeholder="Example: loc vs iloc, multiple-condition filtering, groupby, missing values..."></textarea>
+
+          <button class="button secondary copy-summary" type="button">
+            Copy page title & study prompt
+          </button>
+        </section>
+
+      </article>
+
+      <!-- TABLE OF CONTENTS -->
+      <aside class="toc">
+        <div class="toc-title">ON THIS PAGE</div>
+
+        <a href="#section-1">Introduction to Pandas</a>
+        <a href="#section-2">Series and DataFrames</a>
+        <a href="#section-3">Loading and inspecting</a>
+        <a href="#section-4">Selecting rows and columns</a>
+        <a href="#section-5">Boolean filtering</a>
+        <a href="#section-6">Sorting and ranking</a>
+        <a href="#section-7">Dropping data</a>
+        <a href="#section-8">Missing values</a>
+        <a href="#section-9">Statistical operations</a>
+        <a href="#section-10">Grouping and aggregation</a>
+        <a href="#section-11">Worked example</a>
+        <a href="#section-12">Common mistakes</a>
+        <a href="#section-13">Cheat sheet</a>
+        <a href="#section-14">Practice exercises</a>
+        <a href="#section-15">Viva questions</a>
+        <a href="#section-16">Revision checklist</a>
+
+        <div class="toc-divider"></div>
+        <a href="#main">Back to top ↑</a>
+      </aside>
+    </div>
+
+    <nav class="pager">
+      <a class="pager-link" href="week0.html">
+        ← Week 0
+        <small>Orientation & Machine Learning Workflow</small>
+      </a>
+
+      <a class="pager-link next" href="week2.html">
+        Next: Week 2 →
+        <small>Scikit-learn & Preprocessing</small>
+      </a>
+    </nav>
+
+    <footer class="footer">
+      <span>Made for learning · Open for contributions</span>
+      <a href="https://study.iitm.ac.in/ds/">IITM BS programme ↗</a>
+    </footer>
+
+  </main>
+</div>
+
+<div class="toast" role="status" aria-live="polite"></div>
+</body>
+</html>

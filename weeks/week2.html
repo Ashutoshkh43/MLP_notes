@@ -1,0 +1,1218 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Week 2 - Data Preparation | MLP Notes</title>
+
+    <link rel="stylesheet" href="../styles.css">
+    <script src="../script.js" defer></script>
+
+    <style>
+        /* Week 2 layout overrides */
+        .topbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            min-height: 60px;
+            box-sizing: border-box;
+            background: #ffffff;
+        }
+
+        .sidebar {
+            position: fixed !important;
+            top: 60px !important;
+            left: 0 !important;
+            bottom: 0 !important;
+            width: 250px !important;
+            height: auto !important;
+            overflow-y: auto !important;
+            box-sizing: border-box !important;
+            display: block !important;
+            padding: 24px 16px !important;
+            z-index: 900;
+            background: #f1f5f9;
+        }
+
+        .sidebar nav {
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: stretch !important;
+            gap: 6px;
+        }
+
+        .sidebar nav a {
+            display: block !important;
+            width: auto !important;
+            box-sizing: border-box;
+            text-decoration: none;
+            padding: 10px 12px;
+            border-radius: 8px;
+        }
+
+        .main-content {
+            display: block !important;
+            margin-left: 250px !important;
+            margin-top: 60px !important;
+            padding: 32px !important;
+            min-width: 0;
+            box-sizing: border-box;
+        }
+
+        .page-hero {
+            margin-bottom: 28px;
+        }
+
+        .content-layout {
+            display: grid !important;
+            grid-template-columns: minmax(0, 1fr) 220px;
+            gap: 28px;
+            align-items: start;
+        }
+
+        .notes {
+            min-width: 0;
+        }
+
+        .note-section {
+            margin-bottom: 32px;
+            scroll-margin-top: 80px;
+        }
+
+        .note-section pre {
+            max-width: 100%;
+            overflow-x: auto;
+        }
+
+        .note-section table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .note-section th,
+        .note-section td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #dbe2ea;
+        }
+
+        .toc {
+            position: sticky;
+            top: 85px;
+            max-height: calc(100vh - 100px);
+            overflow-y: auto;
+        }
+
+        .toc nav {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .toc nav a {
+            font-size: 0.9rem;
+        }
+
+        .practice-box {
+            padding: 16px;
+            margin: 20px 0;
+            border-left: 4px solid #64748b;
+            background: #f1f5f9;
+            border-radius: 6px;
+        }
+
+        textarea {
+            font: inherit;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+        }
+
+        @media (max-width: 1000px) {
+            .content-layout {
+                grid-template-columns: minmax(0, 1fr);
+            }
+
+            .toc {
+                position: static;
+                max-height: none;
+                order: -1;
+            }
+        }
+
+        @media (max-width: 700px) {
+            .sidebar {
+                position: static !important;
+                width: 100% !important;
+                height: auto !important;
+                max-height: 280px;
+                margin-top: 60px;
+            }
+
+            .main-content {
+                margin-left: 0 !important;
+                margin-top: 0 !important;
+                padding: 20px !important;
+            }
+
+            .content-layout {
+                display: block !important;
+            }
+
+            .toc {
+                margin-bottom: 24px;
+            }
+        }
+    </style>
+
+    <script>
+        MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            }
+        };
+    </script>
+    <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+
+<body>
+
+<header class="topbar">
+    <div class="topbar-left">
+        <a href="../index.html" class="brand">MLP Notes</a>
+        <span class="topbar-subtitle">IIT Madras BS Degree</span>
+    </div>
+</header>
+
+<aside class="sidebar">
+    <h3>Machine Learning Practice</h3>
+    <nav>
+        <a href="../index.html">Home</a>
+        <a href="week0.html">Week 0 - Introduction</a>
+        <a href="week1.html">Week 1 - Pandas Basics</a>
+        <a href="week2.html" class="active">Week 2 - Data Preparation</a>
+        <a href="week3.html">Week 3</a>
+        <a href="week4.html">Week 4</a>
+        <a href="week5.html">Week 5</a>
+        <a href="week6.html">Week 6</a>
+        <a href="week7.html">Week 7</a>
+        <a href="week8.html">Week 8</a>
+        <a href="week9.html">Week 9</a>
+        <a href="week10.html">Week 10</a>
+        <a href="week11.html">Week 11</a>
+        <a href="week12.html">Week 12</a>
+    </nav>
+</aside>
+
+<main class="main-content">
+
+    <section class="page-hero">
+        <p class="eyebrow">Machine Learning Practice · Week 02</p>
+        <h1>Data Manipulation and Preparation</h1>
+        <p>
+            Detailed notes on cleaning, transforming, combining, and preparing
+            tabular data using Python, Pandas, and NumPy.
+        </p>
+    </section>
+
+    <div class="content-layout">
+
+        <article class="notes">
+
+            <section class="note-section" id="overview">
+                <h2>1. Introduction to Data Preparation</h2>
+
+                <p>
+                    Data preparation is the process of converting raw data into
+                    a consistent and useful format for analysis and machine
+                    learning. Real-world datasets often contain missing values,
+                    duplicate records, inconsistent labels, incorrect data
+                    types, and irrelevant information.
+                </p>
+
+                <h3>Why is data preparation important?</h3>
+                <ul>
+                    <li>Improves data quality and consistency.</li>
+                    <li>Prevents errors during calculations and analysis.</li>
+                    <li>Helps algorithms work with suitable input features.</li>
+                    <li>Reduces problems caused by missing or duplicate records.</li>
+                    <li>Helps prevent data leakage during model evaluation.</li>
+                </ul>
+
+                <h3>Typical workflow</h3>
+                <ol>
+                    <li>Load and inspect the data.</li>
+                    <li>Identify missing values and duplicates.</li>
+                    <li>Correct data types and inconsistent text.</li>
+                    <li>Transform columns and create useful features.</li>
+                    <li>Combine datasets when required.</li>
+                    <li>Validate the cleaned data.</li>
+                </ol>
+
+                <div class="practice-box">
+                    <strong>Key idea:</strong> Data cleaning is not simply
+                    deleting unwanted values. Each transformation should be
+                    appropriate for the meaning and purpose of the dataset.
+                </div>
+            </section>
+
+            <section class="note-section" id="setup">
+                <h2>2. Creating and Inspecting a DataFrame</h2>
+
+                <pre><code>import pandas as pd
+import numpy as np
+
+df = pd.DataFrame({
+    "Student": ["Asha", "Ravi", "Meera", "Arun", "Ravi"],
+    "Department": ["CSE", "ECE", "CSE", "ME", "ECE"],
+    "Age": [20, 21, np.nan, 22, 21],
+    "Marks": [85, 72, 91, np.nan, 72],
+    "Attendance": [90, 75, 95, 60, 75]
+})
+
+print(df.head())
+print(df.shape)
+print(df.columns)
+print(df.dtypes)
+print(df.info())
+print(df.describe())</code></pre>
+
+                <h3>Important inspection methods</h3>
+                <table>
+                    <thead>
+                        <tr><th>Method or property</th><th>Purpose</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><code>head()</code></td><td>Displays the first rows.</td></tr>
+                        <tr><td><code>tail()</code></td><td>Displays the last rows.</td></tr>
+                        <tr><td><code>shape</code></td><td>Returns (rows, columns).</td></tr>
+                        <tr><td><code>columns</code></td><td>Lists column labels.</td></tr>
+                        <tr><td><code>dtypes</code></td><td>Shows each column's data type.</td></tr>
+                        <tr><td><code>info()</code></td><td>Displays structure and non-null counts.</td></tr>
+                        <tr><td><code>describe()</code></td><td>Summarizes numerical columns.</td></tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <section class="note-section" id="missing">
+                <h2>3. Handling Missing Values</h2>
+
+                <p>
+                    Missing values indicate that information is unavailable.
+                    Pandas commonly represents missing data using
+                    <code>NaN</code>, <code>None</code>, <code>pd.NA</code>,
+                    or <code>NaT</code> for missing datetime values.
+                </p>
+
+                <h3>3.1 Detect missing values</h3>
+                <pre><code># Missing-value mask
+df.isna()
+
+# Count missing values in each column
+df.isna().sum()
+
+# Count all missing values
+df.isna().sum().sum()
+
+# Display rows with at least one missing value
+df[df.isna().any(axis=1)]</code></pre>
+
+                <h3>3.2 Remove missing values</h3>
+                <pre><code># Remove rows containing missing values
+df.dropna()
+
+# Remove rows where Marks is missing
+df.dropna(subset=["Marks"])
+
+# Remove columns containing missing values
+df.dropna(axis=1)</code></pre>
+
+                <p>
+                    By default, <code>dropna()</code> removes rows containing
+                    one or more missing values. Always check how many rows
+                    would be lost before applying this strategy.
+                </p>
+
+                <h3>3.3 Fill missing values</h3>
+                <pre><code># Mean imputation
+df["Age"] = df["Age"].fillna(df["Age"].mean())
+
+# Median imputation
+df["Marks"] = df["Marks"].fillna(df["Marks"].median())
+
+# Fill a missing category
+df["Department"] = df["Department"].fillna("Unknown")</code></pre>
+
+                <p>
+                    The mean is sensitive to extreme values. The median is
+                    often more robust for skewed numerical distributions.
+                    For categorical data, a meaningful category or the most
+                    frequent category may be appropriate.
+                </p>
+
+                <h3>3.4 Forward and backward filling</h3>
+                <pre><code>df["Marks"].ffill()
+df["Marks"].bfill()</code></pre>
+
+                <ul>
+                    <li><code>ffill()</code> uses the preceding valid value.</li>
+                    <li><code>bfill()</code> uses the next valid value.</li>
+                </ul>
+
+                <div class="practice-box">
+                    <strong>Machine learning caution:</strong> Learn
+                    imputation statistics from training data only. Apply the
+                    same fitted transformation to validation and test data.
+                </div>
+            </section>
+
+            <section class="note-section" id="duplicates">
+                <h2>4. Duplicate Records</h2>
+
+                <p>
+                    Duplicate records can distort counts and summary
+                    statistics. However, repeated values do not automatically
+                    mean that a record is erroneous.
+                </p>
+
+                <pre><code># Identify duplicate rows
+df.duplicated()
+
+# Count duplicate rows
+df.duplicated().sum()
+
+# Remove duplicate rows
+df.drop_duplicates()
+
+# Check duplicates using selected columns
+df.duplicated(subset=["Student", "Department"])
+
+# Keep the last duplicate occurrence
+df.drop_duplicates(keep="last")</code></pre>
+
+                <p>
+                    By default, <code>duplicated()</code> marks subsequent
+                    occurrences as duplicates, and <code>drop_duplicates()</code>
+                    keeps the first occurrence.
+                </p>
+
+                <p>
+                    Remove duplicates only when they violate the dataset's
+                    rules, such as repeated imports of the same transaction.
+                    Do not remove legitimate repeated events or measurements.
+                </p>
+            </section>
+
+            <section class="note-section" id="dtypes">
+                <h2>5. Data Types and Type Conversion</h2>
+
+                <p>
+                    Correct data types help ensure that values behave
+                    appropriately during calculations and comparisons.
+                </p>
+
+                <table>
+                    <thead>
+                        <tr><th>Type</th><th>Typical use</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><code>int64</code></td><td>Integer values.</td></tr>
+                        <tr><td><code>float64</code></td><td>Decimal values.</td></tr>
+                        <tr><td><code>object</code></td><td>Often text or mixed objects.</td></tr>
+                        <tr><td><code>string</code></td><td>Text data.</td></tr>
+                        <tr><td><code>bool</code></td><td>True/False values.</td></tr>
+                        <tr><td><code>datetime64</code></td><td>Date and time values.</td></tr>
+                        <tr><td><code>category</code></td><td>Values from a limited set of categories.</td></tr>
+                    </tbody>
+                </table>
+
+                <h3>Converting data types</h3>
+                <pre><code># Convert to text
+df["Student"] = df["Student"].astype("string")
+
+# Convert values to numeric
+values = pd.Series(["10", "20", "invalid", "30"])
+numeric_values = pd.to_numeric(values, errors="coerce")
+
+# Nullable integer type can represent missing values
+df["Age"] = df["Age"].round().astype("Int64")</code></pre>
+
+                <p>
+                    With <code>errors="coerce"</code>, invalid numeric values
+                    become missing values. Inspect those values before
+                    deciding how to handle them.
+                </p>
+
+                <p>
+                    Remember that identifiers such as student IDs and postal
+                    codes may look numeric but should often remain text.
+                </p>
+            </section>
+
+            <section class="note-section" id="strings">
+                <h2>6. Cleaning Text Data</h2>
+
+                <p>
+                    Text columns can contain extra spaces and inconsistent
+                    capitalization. These differences may cause equivalent
+                    categories to be treated as separate values.
+                </p>
+
+                <pre><code>names = pd.Series([" Asha ", "RAVI", "Meera ", " arun"])
+
+names = names.str.strip()
+names_lower = names.str.lower()
+names_upper = names.str.upper()
+names_title = names.str.title()
+
+print(names_title)</code></pre>
+
+                <h3>Useful string operations</h3>
+                <pre><code>df["Student"].str.strip()
+df["Student"].str.lower()
+df["Student"].str.upper()
+df["Student"].str.len()
+df["Student"].str.contains("ra", case=False, na=False)
+df["Student"].str.replace(" ", "_", regex=False)
+df["Student"].str.startswith("A", na=False)</code></pre>
+
+                <p>
+                    The <code>.str</code> accessor applies string operations
+                    to an entire Series. Normalize text only when doing so
+                    preserves the meaning of the data.
+                </p>
+            </section>
+
+            <section class="note-section" id="columns">
+                <h2>7. Creating, Renaming, and Removing Columns</h2>
+
+                <h3>7.1 Create derived columns</h3>
+                <pre><code># Create a Boolean feature
+df["Attendance_Eligible"] = df["Attendance"] >= 75
+
+# Create a category using a condition
+df["Attendance_Status"] = np.where(
+    df["Attendance"] >= 75,
+    "Eligible",
+    "Short Attendance"
+)</code></pre>
+
+                <h3>7.2 Apply multiple conditions</h3>
+                <pre><code>conditions = [
+    df["Marks"] >= 90,
+    df["Marks"] >= 75,
+    df["Marks"] >= 50
+]
+
+choices = ["Excellent", "Good", "Pass"]
+
+df["Grade"] = np.select(
+    conditions,
+    choices,
+    default="Needs Improvement"
+)</code></pre>
+
+                <p>
+                    <code>np.select()</code> evaluates conditions in order.
+                    The first matching condition determines the output.
+                </p>
+
+                <h3>7.3 Rename columns</h3>
+                <pre><code>df = df.rename(columns={
+    "Student": "Student_Name",
+    "Marks": "Exam_Marks"
+})</code></pre>
+
+                <h3>7.4 Remove columns</h3>
+                <pre><code>df_without_age = df.drop(columns=["Age"])
+
+df_reduced = df.drop(
+    columns=["Age", "Attendance"]
+)</code></pre>
+            </section>
+
+            <section class="note-section" id="functions">
+                <h2>8. Mapping, Applying, and Vectorization</h2>
+
+                <h3>8.1 Mapping values</h3>
+                <pre><code>mapping = {
+    "CSE": 1,
+    "ECE": 2,
+    "ME": 3
+}
+
+df["Department_Code"] = df["Department"].map(mapping)</code></pre>
+
+                <p>
+                    Values absent from the mapping dictionary produce missing
+                    values in the result.
+                </p>
+
+                <h3>8.2 Applying a custom function</h3>
+                <pre><code>def classify_marks(mark):
+    if pd.isna(mark):
+        return "Missing"
+    if mark >= 90:
+        return "Excellent"
+    if mark >= 75:
+        return "Good"
+    if mark >= 50:
+        return "Pass"
+    return "Fail"
+
+df["Grade"] = df["Marks"].apply(classify_marks)</code></pre>
+
+                <h3>8.3 Vectorized operations</h3>
+                <pre><code>marks = pd.Series([45, 67, 89, 92])
+
+scaled_marks = marks / 100
+passed = marks >= 50</code></pre>
+
+                <p>
+                    Vectorized operations perform calculations over Series
+                    or arrays without writing an explicit Python loop.
+                    They are usually concise and often more efficient.
+                </p>
+            </section>
+
+            <section class="note-section" id="grouping">
+                <h2>9. Grouping and Aggregation</h2>
+
+                <p>
+                    Grouping divides rows into categories so that statistics
+                    can be calculated for each group. This is often described
+                    as the split-apply-combine pattern.
+                </p>
+
+                <pre><code># Average marks per department
+df.groupby("Department")["Marks"].mean()
+
+# Multiple statistics
+df.groupby("Department")["Marks"].agg(
+    ["count", "mean", "min", "max"]
+)
+
+# Count records per department
+df.groupby("Department").size()
+
+# Frequency of each category
+df["Department"].value_counts()
+
+# Proportions instead of counts
+df["Department"].value_counts(normalize=True)</code></pre>
+
+                <h3>agg() versus transform()</h3>
+                <pre><code># A summary for each department
+department_mean = df.groupby("Department")["Marks"].mean()
+
+# A group mean aligned to each original row
+df["Department_Mean"] = (
+    df.groupby("Department")["Marks"].transform("mean")
+)</code></pre>
+
+                <p>
+                    <code>agg()</code> typically reduces each group to summary
+                    values. <code>transform()</code> returns results aligned
+                    with the original rows, making it useful for group-based
+                    features.
+                </p>
+            </section>
+
+            <section class="note-section" id="merge">
+                <h2>10. Combining DataFrames</h2>
+
+                <h3>10.1 Concatenation</h3>
+                <pre><code>df1 = pd.DataFrame({
+    "ID": [1, 2],
+    "Name": ["Asha", "Ravi"]
+})
+
+df2 = pd.DataFrame({
+    "ID": [3, 4],
+    "Name": ["Meera", "Arun"]
+})
+
+combined = pd.concat(
+    [df1, df2],
+    ignore_index=True
+)</code></pre>
+
+                <p>
+                    <code>concat()</code> combines objects along an axis.
+                    By default, <code>axis=0</code> stacks rows.
+                </p>
+
+                <h3>10.2 Merging using a key</h3>
+                <pre><code>students = pd.DataFrame({
+    "ID": [1, 2, 3],
+    "Name": ["Asha", "Ravi", "Meera"]
+})
+
+scores = pd.DataFrame({
+    "ID": [1, 2, 4],
+    "Marks": [85, 72, 90]
+})
+
+inner = pd.merge(
+    students, scores, on="ID", how="inner"
+)
+
+left = pd.merge(
+    students, scores, on="ID", how="left"
+)
+
+outer = pd.merge(
+    students, scores, on="ID", how="outer"
+)</code></pre>
+
+                <table>
+                    <thead>
+                        <tr><th>Join type</th><th>Rows retained</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><code>inner</code></td><td>Matching keys from both datasets.</td></tr>
+                        <tr><td><code>left</code></td><td>All left-side keys.</td></tr>
+                        <tr><td><code>right</code></td><td>All right-side keys.</td></tr>
+                        <tr><td><code>outer</code></td><td>Keys from either dataset.</td></tr>
+                    </tbody>
+                </table>
+
+                <p>
+                    Check key uniqueness before merging. Duplicate keys can
+                    cause many-to-many matches and unexpectedly increase
+                    the number of rows.
+                </p>
+
+                <pre><code>result = pd.merge(
+    students,
+    scores,
+    on="ID",
+    how="left",
+    validate="one_to_one"
+)</code></pre>
+            </section>
+
+            <section class="note-section" id="reshape">
+                <h2>11. Reshaping Data</h2>
+
+                <h3>11.1 Pivot</h3>
+                <pre><code>sales = pd.DataFrame({
+    "Department": ["CSE", "CSE", "ECE", "ECE"],
+    "Semester": [1, 2, 1, 2],
+    "Marks": [80, 90, 70, 85]
+})
+
+wide = sales.pivot(
+    index="Department",
+    columns="Semester",
+    values="Marks"
+)</code></pre>
+
+                <p>
+                    <code>pivot()</code> reshapes data and requires each
+                    index-column combination to identify a single value.
+                </p>
+
+                <h3>11.2 Pivot table</h3>
+                <pre><code>summary = pd.pivot_table(
+    sales,
+    index="Department",
+    columns="Semester",
+    values="Marks",
+    aggfunc="mean"
+)</code></pre>
+
+                <p>
+                    <code>pivot_table()</code> can aggregate repeated
+                    combinations, using functions such as mean, sum, or count.
+                </p>
+
+                <h3>11.3 Melt</h3>
+                <pre><code>wide_df = pd.DataFrame({
+    "Student": ["Asha", "Ravi"],
+    "Maths": [90, 80],
+    "Science": [85, 88]
+})
+
+long_df = pd.melt(
+    wide_df,
+    id_vars=["Student"],
+    var_name="Subject",
+    value_name="Marks"
+)</code></pre>
+
+                <p>
+                    <code>melt()</code> converts selected columns into rows,
+                    producing a long-format dataset.
+                </p>
+            </section>
+
+            <section class="note-section" id="dates">
+                <h2>12. Dates and Times</h2>
+
+                <pre><code>df_dates = pd.DataFrame({
+    "Student": ["Asha", "Ravi", "Meera"],
+    "Exam_Date": [
+        "2026-01-10",
+        "2026-02-15",
+        "2026-03-20"
+    ]
+})
+
+df_dates["Exam_Date"] = pd.to_datetime(
+    df_dates["Exam_Date"]
+)
+
+df_dates["Year"] = df_dates["Exam_Date"].dt.year
+df_dates["Month"] = df_dates["Exam_Date"].dt.month
+df_dates["Day"] = df_dates["Exam_Date"].dt.day
+df_dates["Day_Name"] = df_dates["Exam_Date"].dt.day_name()
+
+recent = df_dates[
+    df_dates["Exam_Date"] >= "2026-02-01"
+]</code></pre>
+
+                <p>
+                    Convert date strings to datetime values before performing
+                    date comparisons. The <code>.dt</code> accessor provides
+                    date components and other datetime operations.
+                </p>
+
+                <pre><code># Invalid dates become NaT
+df_dates["Exam_Date"] = pd.to_datetime(
+    df_dates["Exam_Date"],
+    errors="coerce"
+)</code></pre>
+            </section>
+
+            <section class="note-section" id="encoding">
+                <h2>13. Categorical Encoding</h2>
+
+                <p>
+                    Categorical encoding converts category labels into
+                    numerical representations that can be used by
+                    machine learning algorithms.
+                </p>
+
+                <h3>13.1 Category codes</h3>
+                <pre><code>departments = df["Department"].astype("category")
+df["Department_Code"] = departments.cat.codes</code></pre>
+
+                <p>
+                    Category codes are identifiers, not automatically
+                    meaningful numerical rankings.
+                </p>
+
+                <h3>13.2 One-hot encoding</h3>
+                <pre><code>departments = pd.DataFrame({
+    "Department": ["CSE", "ECE", "ME", "CSE"]
+})
+
+encoded = pd.get_dummies(
+    departments,
+    columns=["Department"],
+    dtype=int
+)
+
+print(encoded)</code></pre>
+
+                <p>
+                    One-hot encoding creates separate indicator columns for
+                    categories. It is often appropriate for nominal features
+                    that do not have a natural order.
+                </p>
+            </section>
+
+            <section class="note-section" id="scaling">
+                <h2>14. Feature Scaling</h2>
+
+                <p>
+                    Features can have very different ranges. For example,
+                    age may range from 18 to 60 while income may range
+                    from thousands to millions.
+                </p>
+
+                <h3>14.1 Min-max scaling</h3>
+                <p>The formula is:</p>
+
+                $$x' = \frac{x-x_{\min}}{x_{\max}-x_{\min}}$$
+
+                <p>
+                    For a non-constant feature, this scales training values
+                    to the range 0 to 1.
+                </p>
+
+                <h3>14.2 Standardization</h3>
+                $$z = \frac{x-\mu}{\sigma}$$
+
+                <p>
+                    Here, \(\mu\) is the mean and \(\sigma\) is the standard
+                    deviation. Standardized values are not necessarily
+                    restricted to 0 and 1.
+                </p>
+
+                <pre><code>from sklearn.preprocessing import MinMaxScaler, StandardScaler
+
+X = pd.DataFrame({
+    "Age": [20, 25, 30, 35],
+    "Income": [20000, 35000, 50000, 65000]
+})
+
+scaler = StandardScaler()
+X_scaled = scaler.fit_transform(X)</code></pre>
+
+                <p>
+                    Fit scaling parameters on training data only. Use the
+                    fitted scaler to transform validation and test data.
+                    Scaling is especially important for many distance-based
+                    and gradient-based algorithms.
+                </p>
+            </section>
+
+            <section class="note-section" id="leakage">
+                <h2>15. Data Leakage</h2>
+
+                <p>
+                    Data leakage occurs when information that should not be
+                    available to a model at prediction time influences
+                    training or evaluation.
+                </p>
+
+                <h3>Examples</h3>
+                <ul>
+                    <li>Calculating imputation values using the entire dataset before splitting.</li>
+                    <li>Scaling all rows before creating the train-test split.</li>
+                    <li>Using information derived from the target as an input feature.</li>
+                    <li>Using future observations to predict past events.</li>
+                </ul>
+
+                <h3>Safer preprocessing workflow</h3>
+                <pre><code>from sklearn.model_selection import train_test_split
+from sklearn.impute import SimpleImputer
+from sklearn.preprocessing import StandardScaler
+from sklearn.pipeline import make_pipeline
+
+X = df[["Age", "Attendance"]]
+y = df["Marks"]
+
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y,
+    test_size=0.2,
+    random_state=42
+)
+
+preprocessor = make_pipeline(
+    SimpleImputer(strategy="median"),
+    StandardScaler()
+)
+
+X_train_processed = preprocessor.fit_transform(X_train)
+X_test_processed = preprocessor.transform(X_test)</code></pre>
+
+                <p>
+                    The preprocessor learns its parameters from the training
+                    data. The test data is transformed using those same
+                    parameters without fitting again.
+                </p>
+            </section>
+
+            <section class="note-section" id="worked-example">
+                <h2>16. Complete Worked Example</h2>
+
+                <pre><code>import pandas as pd
+import numpy as np
+
+df = pd.DataFrame({
+    "Student": [" Asha ", "RAVI", "Meera", "Asha "],
+    "Department": ["CSE", "ECE", "cse", "CSE"],
+    "Age": [20, 21, np.nan, 20],
+    "Marks": [85, 72, 91, 85],
+    "Attendance": [90, 75, 95, 90]
+})
+
+# Inspect
+print(df.shape)
+print(df.isna().sum())
+
+# Normalize text
+df["Student"] = df["Student"].str.strip().str.title()
+df["Department"] = df["Department"].str.strip().str.upper()
+
+# Remove exact duplicate records
+df = df.drop_duplicates()
+
+# Fill missing ages
+df["Age"] = df["Age"].fillna(df["Age"].median())
+
+# Create a derived feature
+df["Eligible"] = df["Attendance"] >= 75
+
+# Sort by marks
+df = df.sort_values("Marks", ascending=False)
+
+# Reset the row index
+df = df.reset_index(drop=True)
+
+# Validate the result
+print(df)
+print(df.dtypes)
+print(df.isna().sum())</code></pre>
+
+                <h3>What did we learn?</h3>
+                <ul>
+                    <li>Inspect the raw dataset before making changes.</li>
+                    <li>Normalize text to make category labels consistent.</li>
+                    <li>Remove duplicates only when they are genuine duplicates.</li>
+                    <li>Choose an appropriate missing-value strategy.</li>
+                    <li>Create features when they are useful for analysis.</li>
+                    <li>Check the resulting dataset after transformations.</li>
+                </ul>
+            </section>
+
+            <section class="note-section" id="mistakes">
+                <h2>17. Common Mistakes</h2>
+
+                <h3>Mistake 1: Using <code>and</code> instead of <code>&amp;</code></h3>
+                <pre><code># Correct: use parentheses around each condition
+filtered = df[
+    (df["Marks"] >= 50) &
+    (df["Attendance"] >= 75)
+]</code></pre>
+
+                <h3>Mistake 2: Assuming every method modifies the DataFrame</h3>
+                <pre><code># Save the returned DataFrame
+cleaned = df.dropna()
+
+# Or assign it back
+df = df.dropna()</code></pre>
+
+                <h3>Mistake 3: Removing all missing rows without checking</h3>
+                <p>
+                    This may discard a large portion of a dataset. Inspect
+                    the missing-value pattern and consider appropriate
+                    imputation when justified.
+                </p>
+
+                <h3>Mistake 4: Merging without checking duplicate keys</h3>
+                <p>
+                    Repeated keys can produce more rows than expected.
+                    Inspect key uniqueness and validate the intended join.
+                </p>
+
+                <h3>Mistake 5: Treating category codes as rankings</h3>
+                <p>
+                    A category code is not necessarily a measure of magnitude
+                    or order.
+                </p>
+
+                <h3>Mistake 6: Preprocessing before splitting the data</h3>
+                <p>
+                    Fit imputers, scalers, and encoders using training data
+                    only to avoid leaking information from test data.
+                </p>
+            </section>
+
+            <section class="note-section" id="cheatsheet">
+                <h2>18. Quick Revision Cheat Sheet</h2>
+
+                <table>
+                    <thead>
+                        <tr><th>Task</th><th>Command</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Inspect data types</td><td><code>df.dtypes</code></td></tr>
+                        <tr><td>Count missing values</td><td><code>df.isna().sum()</code></td></tr>
+                        <tr><td>Remove missing rows</td><td><code>df.dropna()</code></td></tr>
+                        <tr><td>Fill missing values</td><td><code>df.fillna(value)</code></td></tr>
+                        <tr><td>Find duplicates</td><td><code>df.duplicated()</code></td></tr>
+                        <tr><td>Remove duplicates</td><td><code>df.drop_duplicates()</code></td></tr>
+                        <tr><td>Convert to numeric</td><td><code>pd.to_numeric(s)</code></td></tr>
+                        <tr><td>Convert to dates</td><td><code>pd.to_datetime(s)</code></td></tr>
+                        <tr><td>Clean whitespace</td><td><code>s.str.strip()</code></td></tr>
+                        <tr><td>Map values</td><td><code>s.map(mapping)</code></td></tr>
+                        <tr><td>Group data</td><td><code>df.groupby("col")</code></td></tr>
+                        <tr><td>Combine rows</td><td><code>pd.concat([...])</code></td></tr>
+                        <tr><td>Join datasets</td><td><code>pd.merge(a, b, on="key")</code></td></tr>
+                        <tr><td>One-hot encoding</td><td><code>pd.get_dummies(df)</code></td></tr>
+                        <tr><td>Reset index</td><td><code>df.reset_index(drop=True)</code></td></tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <section class="note-section" id="exercises">
+                <h2>19. Practice Exercises</h2>
+
+                <ol>
+                    <li>Create a DataFrame with student names, marks, departments, and attendance.</li>
+                    <li>Count missing values in each column.</li>
+                    <li>Fill missing marks with the median.</li>
+                    <li>Remove duplicate records and explain when this is appropriate.</li>
+                    <li>Standardize department names using string operations.</li>
+                    <li>Create a Boolean column for attendance of at least 75%.</li>
+                    <li>Calculate average marks for each department.</li>
+                    <li>Sort students by marks in descending order.</li>
+                    <li>Combine two DataFrames using inner and left joins.</li>
+                    <li>Convert a text column into datetime format.</li>
+                    <li>Encode a categorical column using one-hot encoding.</li>
+                    <li>Explain how to prevent data leakage during imputation.</li>
+                </ol>
+
+                <details>
+                    <summary>Show answer hints</summary>
+                    <ul>
+                        <li>Use <code>pd.DataFrame()</code>.</li>
+                        <li>Use <code>df.isna().sum()</code>.</li>
+                        <li>Use <code>fillna(df["Marks"].median())</code>.</li>
+                        <li>Use <code>drop_duplicates()</code>.</li>
+                        <li>Use <code>.str.strip().str.upper()</code>.</li>
+                        <li>Use <code>df["Attendance"] >= 75</code>.</li>
+                        <li>Use <code>groupby("Department")["Marks"].mean()</code>.</li>
+                        <li>Use <code>sort_values("Marks", ascending=False)</code>.</li>
+                        <li>Use <code>pd.merge()</code> with the appropriate <code>how</code> value.</li>
+                        <li>Use <code>pd.to_datetime()</code>.</li>
+                        <li>Use <code>pd.get_dummies()</code>.</li>
+                        <li>Split first, fit preprocessing on training data, and transform the other splits.</li>
+                    </ul>
+                </details>
+            </section>
+
+            <section class="note-section" id="viva">
+                <h2>20. Viva Questions and Answers</h2>
+
+                <h3>Q1. What is data preprocessing?</h3>
+                <p>Cleaning and transforming raw data into a suitable format for analysis or machine learning.</p>
+
+                <h3>Q2. How do you identify missing values?</h3>
+                <p>Use <code>isna()</code> or <code>isnull()</code>; use <code>df.isna().sum()</code> to count them by column.</p>
+
+                <h3>Q3. What is the difference between <code>dropna()</code> and <code>fillna()</code>?</h3>
+                <p><code>dropna()</code> removes records or columns with missing values; <code>fillna()</code> replaces missing values.</p>
+
+                <h3>Q4. Why use the median for imputation?</h3>
+                <p>The median is less affected by extreme observations than the mean.</p>
+
+                <h3>Q5. What does <code>duplicated()</code> return?</h3>
+                <p>A Boolean Series indicating which rows are duplicates under the selected criteria.</p>
+
+                <h3>Q6. What is the purpose of <code>astype()</code>?</h3>
+                <p>It converts a Series or DataFrame column to a specified data type.</p>
+
+                <h3>Q7. What is the purpose of <code>groupby()</code>?</h3>
+                <p>It groups rows by category so that group-wise calculations can be performed.</p>
+
+                <h3>Q8. How do <code>agg()</code> and <code>transform()</code> differ?</h3>
+                <p><code>agg()</code> produces group summaries, while <code>transform()</code> produces results aligned with original rows.</p>
+
+                <h3>Q9. How do <code>concat()</code> and <code>merge()</code> differ?</h3>
+                <p><code>concat()</code> combines objects along an axis; <code>merge()</code> joins datasets using keys.</p>
+
+                <h3>Q10. What is an inner join?</h3>
+                <p>A join that keeps only matching keys from both datasets.</p>
+
+                <h3>Q11. What is one-hot encoding?</h3>
+                <p>A method that represents categories as separate indicator columns.</p>
+
+                <h3>Q12. What is vectorization?</h3>
+                <p>Performing operations over whole arrays or Series instead of explicitly iterating through each element.</p>
+
+                <h3>Q13. What is data leakage?</h3>
+                <p>When inappropriate information influences model training or evaluation and makes performance estimates unreliable.</p>
+
+                <h3>Q14. Why split data before fitting a scaler?</h3>
+                <p>To ensure the scaler learns parameters only from training data, not from the test set.</p>
+
+                <h3>Q15. What is the difference between <code>pivot()</code> and <code>pivot_table()</code>?</h3>
+                <p><code>pivot()</code> reshapes unique index-column combinations; <code>pivot_table()</code> can aggregate repeated combinations.</p>
+
+                <h3>Q16. Why reset an index?</h3>
+                <p>To create a fresh sequential index, often after filtering or sorting rows.</p>
+
+                <h3>Q17. Why are data types important?</h3>
+                <p>They determine how values are stored, compared, and used in calculations.</p>
+
+                <h3>Q18. When is feature scaling useful?</h3>
+                <p>It is often useful for distance-based and gradient-based algorithms when features have different scales.</p>
+            </section>
+
+            <section class="note-section" id="revision">
+                <h2>21. Final Revision Checklist</h2>
+
+                <ul>
+                    <li>Inspect DataFrame structure and data types.</li>
+                    <li>Identify and handle missing values.</li>
+                    <li>Detect duplicates and decide whether to remove them.</li>
+                    <li>Convert numerical, textual, and datetime columns.</li>
+                    <li>Clean inconsistent text labels.</li>
+                    <li>Create and transform features.</li>
+                    <li>Use grouping, aggregation, and transformation.</li>
+                    <li>Combine datasets with concatenation and joins.</li>
+                    <li>Understand pivoting, melting, and categorical encoding.</li>
+                    <li>Understand scaling and data leakage.</li>
+                    <li>Validate the dataset after preparation.</li>
+                </ul>
+
+                <div class="practice-box">
+                    <strong>Week 2 takeaway:</strong> Good data preparation
+                    preserves the meaning of the dataset, handles data-quality
+                    problems carefully, and avoids using information that
+                    would not be available at prediction time.
+                </div>
+            </section>
+
+            <section class="note-section" id="personal-notes">
+                <h2>My Personal Notes</h2>
+                <p>Write down doubts, examples, and concepts to revise.</p>
+
+                <textarea
+                    id="week2-personal-notes"
+                    rows="8"
+                    placeholder="Write your Week 2 notes here..."
+                    style="width:100%; padding:12px; box-sizing:border-box;"
+                ></textarea>
+            </section>
+
+            <nav class="pager">
+                <a href="week1.html">&larr; Previous: Week 1</a>
+                <a href="week3.html">Next: Week 3 &rarr;</a>
+            </nav>
+
+        </article>
+
+        <aside class="toc">
+            <h3>On This Page</h3>
+            <nav>
+                <a href="#overview">1. Introduction</a>
+                <a href="#setup">2. DataFrame Setup</a>
+                <a href="#missing">3. Missing Values</a>
+                <a href="#duplicates">4. Duplicates</a>
+                <a href="#dtypes">5. Data Types</a>
+                <a href="#strings">6. Text Cleaning</a>
+                <a href="#columns">7. Columns</a>
+                <a href="#functions">8. Functions</a>
+                <a href="#grouping">9. Grouping</a>
+                <a href="#merge">10. Combining Data</a>
+                <a href="#reshape">11. Reshaping</a>
+                <a href="#dates">12. Dates</a>
+                <a href="#encoding">13. Encoding</a>
+                <a href="#scaling">14. Scaling</a>
+                <a href="#leakage">15. Data Leakage</a>
+                <a href="#worked-example">16. Worked Example</a>
+                <a href="#mistakes">17. Common Mistakes</a>
+                <a href="#cheatsheet">18. Cheat Sheet</a>
+                <a href="#exercises">19. Exercises</a>
+                <a href="#viva">20. Viva Questions</a>
+                <a href="#revision">21. Revision</a>
+                <a href="#personal-notes">Personal Notes</a>
+            </nav>
+        </aside>
+
+    </div>
+
+</main>
+
+</body>
+</html>
